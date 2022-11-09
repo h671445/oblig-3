@@ -1,5 +1,7 @@
 package no.hvl.dat100.jplab11.oppgave3;
 
+import java.util.Arrays;
+
 import no.hvl.dat100.jplab11.common.TODO;
 import no.hvl.dat100.jplab11.oppgave1.*;
 
@@ -33,29 +35,31 @@ public class Blogg {
 	public int finnInnlegg(Innlegg innlegg) {
 		boolean funnet = false;
 		int i = 0;
-		int x = 0;
 		while(i < nesteledig && !funnet) {
-			if (tabell[i].erLik(innlegg)) {
+			if (tabell[i].getId() == innlegg.getId()) {
 				funnet = true;
-				x = i;
 			} else {
 				i++;
 			}
 		}
-		if (funnet = false) {
-			x = -1;
+		if (funnet) {
+			return i;
+		}else {
+			return -1;
 		}
-		return x;
+		
 	}
 
 	public boolean finnes(Innlegg innlegg) {
 		boolean funnet = false;
-		for (int i = 0; i < nesteledig; i++) {
-			if (tabell[i].getId() == innlegg.getId()) {
-				funnet = true;
-			} else {
-				funnet = false;
-			}
+		if(!funnet) {
+			for (int i = 0; i < nesteledig; i++) {
+				if (tabell[i].getId() == innlegg.getId()) {
+					funnet = true;
+				} else {
+					funnet = false;
+		   	  }
+		   }
 		}
 		return funnet;
 	}
@@ -70,14 +74,14 @@ public class Blogg {
 	}
 	
 	public boolean leggTil(Innlegg innlegg) {
-		if (!finnes(innlegg) && nesteledig < tabell.length) {
+		boolean ny = finnInnlegg(innlegg) == -1;
+		if (ny && nesteledig < tabell.length) {
 			tabell[nesteledig] = innlegg;
 			nesteledig++;
 			return true;
-		} else {
+		}else {
 			return false;
 		}
-		
 		
 		
 		
@@ -106,8 +110,15 @@ public class Blogg {
 	}
 	
 	public boolean slett(Innlegg innlegg) {
-		
-		throw new UnsupportedOperationException(TODO.method());
+		int pos = finnInnlegg(innlegg);
+		if(pos > -1) {
+			nesteledig--;
+			tabell[pos] = tabell[nesteledig];
+			tabell[nesteledig] = null;
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	public int[] search(String keyword) {
